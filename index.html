@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Panificadora Amsterdam</title>
+<meta name="theme-color" content="#0E1C3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Amsterdam">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Lora:ital,wght@1,500;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#F5EDDF;--surface:#fff;--ink:#0E1C3A;--muted:#5B6478;--primary:#0E1C3A;--primary-2:#152A52;--primary-3:#1F3A6B;--accent:#E9743A;--accent-2:#F28F57;--info:#9CCBEA;--success:#7D8340;--danger:#C8473B;--line:rgba(14,28,58,.12);--sand2:#EADFCB;
+  --ft:'Poppins',system-ui,sans-serif;--fa:'Lora',Georgia,serif;--fb:'Inter',system-ui,sans-serif;--sh:0 10px 30px rgba(14,28,58,.07)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--fb);font-size:16px;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+.hide{display:none!important}
+/* login */
+.login{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px 16px;background:radial-gradient(900px 500px at 85% -10%,rgba(233,116,58,.25),transparent 60%),var(--primary)}
+.login-in{width:100%;max-width:400px;background:#fff;border-radius:28px;padding:32px 26px;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.logo{display:inline-block;background:var(--accent);color:#fff;font-family:var(--ft);font-weight:700;font-size:15px;border-radius:999px;padding:6px 14px}
+.eyebrow{font-family:var(--ft);font-weight:500;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--primary-3);margin:18px 0 6px}
+.eyebrow span{color:var(--accent);margin-right:10px}
+h1{font-family:var(--ft);font-weight:700;font-size:30px;letter-spacing:-.02em;line-height:1.1}
+h1 em{font-family:var(--fa);font-style:italic;font-weight:500;color:var(--accent)}
+.sub{color:var(--muted);font-size:15px;margin:8px 0 20px}
+label.f{display:block;font-weight:600;font-size:13px;margin:14px 0 6px}
+.fi{width:100%;height:50px;border:1px solid var(--line);border-radius:16px;background:#fff;padding:0 14px;font-size:16px;outline:none}
+.fi:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(233,116,58,.3)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;background:var(--accent);color:#fff;font-family:var(--ft);font-weight:600;font-size:15px;padding:14px 26px;cursor:pointer;min-height:48px}
+.btn.sec{background:#fff;color:var(--ink);border:2px solid var(--primary)}
+.btn.ghost{background:none;color:var(--muted);padding:10px 14px;min-height:0;font-weight:500}
+.btn.sm{padding:9px 16px;min-height:38px;font-size:14px}
+.btn.full{width:100%}
+.btn:disabled{opacity:.5}
+.err{background:#FBE9E7;color:var(--danger);border-radius:12px;padding:10px 12px;font-size:14px;margin-top:12px}
+/* app */
+.top{background:var(--primary);color:#fff;padding:18px 16px 70px;position:relative;overflow:hidden}
+.top::after{content:'';position:absolute;right:-120px;top:-160px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(233,116,58,.45),transparent 65%)}
+.top-in,.main{max-width:980px;margin:0 auto;position:relative;z-index:1}
+.top-row{display:flex;align-items:center;gap:10px}
+.top-row .sp{flex:1}
+.who{font-size:13px;opacity:.85;text-align:right;line-height:1.3}
+.who b{display:block;font-family:var(--ft);opacity:1}
+.out{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:999px;padding:8px 14px;font-size:13px;cursor:pointer}
+.hello{margin-top:26px}
+.hello h1{color:#fff;font-size:34px}
+.hello .date{font-family:var(--ft);font-size:12px;letter-spacing:.24em;text-transform:uppercase;opacity:.75;margin-top:8px}
+.main{padding:0 16px 48px;margin-top:-46px}
+.apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.app{position:relative;text-align:left;background:#fff;border:0;border-radius:24px;padding:22px;box-shadow:var(--sh);cursor:pointer;display:flex;flex-direction:column;gap:6px;min-height:170px;border-top:5px solid var(--c,var(--accent));transition:transform .15s}
+.app:hover{transform:translateY(-2px)}
+.app:active{transform:scale(.98)}
+.app .ic{font-size:34px;line-height:1;margin-bottom:8px}
+.app b{font-family:var(--ft);font-size:20px}
+.app p{color:var(--muted);font-size:14px;line-height:1.4;flex:1}
+.app .rl{align-self:flex-start;font-family:var(--ft);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:var(--bg);color:var(--primary-3);border-radius:999px;padding:4px 10px;margin-top:6px}
+.app .go{position:absolute;right:20px;top:22px;color:var(--accent);font-family:var(--ft);font-weight:700;font-size:20px}
+.app.soon{background:transparent;border:2px dashed var(--sand2);border-top:2px dashed var(--sand2);box-shadow:none;cursor:default}
+.app.soon b,.app.soon .ic{opacity:.55}
+.app.admin{background:var(--primary);color:#fff;border-top-color:var(--accent)}
+.app.admin p{color:rgba(255,255,255,.75)}
+.empty{background:#fff;border-radius:24px;padding:28px;box-shadow:var(--sh);text-align:center;color:var(--muted)}
+.empty b{display:block;font-family:var(--ft);color:var(--ink);font-size:18px;margin-bottom:6px}
+.sect{font-family:var(--ft);font-weight:500;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--primary-3);margin:30px 0 12px}
+.sect span{color:var(--accent);margin-right:10px}
+/* usuarios */
+.uhead{display:flex;align-items:center;gap:10px;margin:8px 0 14px;flex-wrap:wrap}
+.uhead .sp{flex:1}
+.search{height:44px;border:1px solid var(--line);border-radius:999px;padding:0 16px;background:#fff;min-width:0;flex:1;max-width:320px}
+.ulist{background:#fff;border-radius:24px;box-shadow:var(--sh);overflow:hidden}
+.urow{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);cursor:pointer}
+.urow:last-child{border-bottom:0}
+.urow:hover{background:#FBF7F0}
+.urow.off{opacity:.5}
+.av{width:40px;height:40px;border-radius:50%;background:var(--primary-3);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--ft);font-weight:700;flex-shrink:0}
+.urow .nm{flex:1;min-width:0}
+.urow .nm b{font-family:var(--ft);font-weight:600;display:block}
+.urow .nm small{color:var(--muted);font-size:13px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.tag{font-size:12px;font-weight:600;border-radius:999px;padding:4px 10px;background:var(--bg);white-space:nowrap}
+.tag.none{color:var(--muted);font-weight:500}
+@media(max-width:640px){.urow{flex-wrap:wrap}.tags{width:100%;justify-content:flex-start;padding-left:52px}}
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(14,28,58,.5);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.md{background:var(--bg);width:100%;max-width:560px;max-height:94vh;overflow:auto;border-radius:28px 28px 0 0;padding:24px 20px calc(20px + env(safe-area-inset-bottom))}
+@media(min-width:640px){.ov{align-items:center;padding:20px}.md{border-radius:28px}}
+.md h2{font-family:var(--ft);font-size:22px;margin-bottom:4px}
+.md h2 em{font-family:var(--fa);font-style:italic;font-weight:500;color:var(--accent)}
+.box{background:#fff;border-radius:20px;padding:16px;margin-top:14px}
+.box .fi{background:#fff}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:480px){.two{grid-template-columns:1fr}}
+.acc{border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-top:10px;border-left:5px solid var(--c)}
+.acc-h{display:flex;align-items:center;gap:10px}
+.acc-h b{font-family:var(--ft);flex:1}
+.acc-b{margin-top:10px}
+.acc.off .acc-b{display:none}
+.sw{position:relative;width:48px;height:28px;flex-shrink:0}
+.sw input{opacity:0;width:0;height:0}
+.sw span{position:absolute;inset:0;background:#D8D2C6;border-radius:999px;transition:.2s;cursor:pointer}
+.sw span::before{content:'';position:absolute;width:22px;height:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sw input:checked+span{background:var(--success)}
+.sw input:checked+span::before{transform:translateX(20px)}
+.fs{width:100%;height:46px;border:1px solid var(--line);border-radius:14px;padding:0 12px;background:#fff}
+.chk{display:flex;align-items:center;gap:8px;font-size:14px;margin-top:10px;cursor:pointer}
+.chk input{width:18px;height:18px;accent-color:var(--accent)}
+.help{font-size:12.5px;color:var(--muted);margin-top:6px}
+.mfoot{display:flex;gap:10px;margin-top:18px}
+.mfoot .btn{flex:1}
+.del{display:block;width:100%;background:none;border:0;color:var(--danger);font-weight:600;padding:12px;margin-top:8px;cursor:pointer}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:var(--primary);color:#fff;padding:12px 18px;border-radius:999px;font-size:14px;z-index:90;transition:.25s;max-width:calc(100% - 32px);text-align:center}
+.toast.on{transform:translateX(-50%) translateY(0)}
+.toast.e{background:var(--danger)}
+.loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--primary);color:#fff;font-family:var(--ft);z-index:100}
+.back{background:none;border:0;color:var(--primary-3);font-weight:600;cursor:pointer;padding:6px 0;font-size:15px}
+</style>
+</head>
+<body>
+<div class="loading" id="loading">Cargando…</div>
+
+<div class="login hide" id="v-login">
+  <div class="login-in">
+    <span class="logo">Amsterdam</span>
+    <div class="eyebrow"><span>🍞</span>Panificadora Amsterdam</div>
+    <h1>Bienvenido a <em>las apps.</em></h1>
+    <div class="sub">Ingresá con tu usuario y contraseña.</div>
+    <label class="f" for="l-user">Usuario</label>
+    <input class="fi" id="l-user" autocapitalize="none" autocorrect="off" autocomplete="username" placeholder="Ej: sergio">
+    <label class="f" for="l-pass">Contraseña</label>
+    <input class="fi" id="l-pass" type="password" autocomplete="current-password" placeholder="••••••••">
+    <div class="err hide" id="l-err"></div>
+    <button class="btn full" style="margin-top:20px" id="l-go">Ingresar</button>
+  </div>
+</div>
+
+<div class="hide" id="v-app">
+  <div class="top"><div class="top-in">
+    <div class="top-row"><span class="logo">Amsterdam</span><div class="sp"></div><div class="who"><b id="u-name">—</b><span id="u-role"></span></div><button class="out" id="logout">Salir</button></div>
+    <div class="hello" id="hello"></div>
+  </div></div>
+  <div class="main" id="main"></div>
+</div>
+
+<div id="modal"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════ PORTAL · Panificadora Amsterdam ═══════════
+   Un solo acceso para todas las apps. Usuarios: tabla am_users.
+   Cada usuario tiene en am_users.apps qué apps puede usar:
+   {"mantenimiento":true,"pan_molde":"produccion","pedidos":true}
+   Al abrir una app se pasa un token (#sso=id.token) y la app entra sola. */
+var SB_URL='https://lyzfmbiusuxsuyoowrdy.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5emZtYml1c3V4c3V5b293cmR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyNjU0MjAsImV4cCI6MjEwMDg0MTQyMH0.AYz5L8IExegZNhZ423IXmGJucY2bDJkWlpHZFuR8cFg';
+var sb=supabase.createClient(SB_URL,SB_KEY);
+
+var APPS=[
+  {k:'mantenimiento',ic:'🔧',n:'Mantenimiento',d:'Pedidos de mantenimiento, tablero, máquinas y reportes.',c:'#E9743A',url:'https://mantenimiento.panaderiaamsterdam.com.uy/',
+   roles:[['encargado','Encargado (hace pedidos)'],['jefe','Jefe de mantenimiento'],['operario','Operario (solo sus tareas)'],['admin','Administración']]},
+  {k:'pan_molde',ic:'🍞',n:'Control moldes',d:'Flujo por lote: pedido, producido, cortado y descarte.',c:'#CDA85E',url:'https://cragabrielapenas-byte.github.io/amsterdam-pan-molde/',
+   roles:[['despacho','Encargado de pedido (paso 1)'],['produccion','Encargado de producción (paso 2)'],['sandwicheria','Encargado de sandwichería (paso 3)'],['supervisor','Supervisión'],['consulta','Solo consulta'],['admin','Administración']]},
+  {k:'pedidos',ic:'🥪',n:'Envasado y Sandwichería',d:'Recepción pasa los pedidos de clientes especiales a Sandwichería y Envasado.',c:'#5FA3CF',url:'https://pedidos.panaderiaamsterdam.com.uy/'}
+];
+var ROLE_M={admin:'Administración',jefe:'Jefe de mantenimiento',encargado:'Encargado',operario:'Operario'};
+var me=null,users=[],personas=[],view='home',q='';
+
+var $=function(id){return document.getElementById(id);};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function norm(s){return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim();}
+function toast(m,e){var t=$('toast');t.textContent=m;t.className='toast on'+(e?' e':'');clearTimeout(t._t);t._t=setTimeout(function(){t.className='toast'+(e?' e':'');},3200);}
+function isAdmin(){return me&&me.role==='admin';}
+function appsOf(u){
+  if(u.apps&&typeof u.apps==='object')return u.apps;
+  return {mantenimiento:true}; // usuarios viejos: solo mantenimiento
+}
+function hasApp(u,k){var a=appsOf(u);return !!a[k];}
+function roleIn(u,k){
+  if(k==='mantenimiento')return ROLE_M[u.role]||u.role;
+  if(k==='pan_molde'){var a=APPS[1].roles.find(function(r){return r[0]===appsOf(u).pan_molde;});return a?a[1].replace(/ \(.*\)/,''):'';}
+  return '';
+}
+function token(){var a=new Uint8Array(24);crypto.getRandomValues(a);return Array.from(a,function(b){return b.toString(16).padStart(2,'0');}).join('');}
+function save(){try{localStorage.setItem('ams_portal',JSON.stringify({id:me.id,t:me.sso_token}));}catch(e){}}
+
+/* ── sesión ── */
+async function login(){
+  var u=$('l-user').value.trim().toLowerCase(),p=$('l-pass').value;
+  if(!u||!p)return;
+  $('l-go').disabled=true;$('l-err').classList.add('hide');
+  var r=await sb.from('am_users').select('*').ilike('email',u).eq('password',p).eq('active',true).maybeSingle();
+  $('l-go').disabled=false;
+  if(r.error||!r.data){$('l-err').textContent=r.error?'No se pudo conectar. Probá de nuevo.':'Usuario o contraseña incorrectos.';$('l-err').classList.remove('hide');return;}
+  me=r.data;
+  var t=token(),exp=new Date(Date.now()+30*864e5).toISOString();
+  var up=await sb.from('am_users').update({sso_token:t,sso_exp:exp}).eq('id',me.id);
+  if(up.error){$('l-err').textContent='Falta correr el SQL del portal en Supabase.';$('l-err').classList.remove('hide');console.error(up.error);return;}
+  me.sso_token=t;me.sso_exp=exp;save();$('l-pass').value='';
+  await enter();
+}
+async function restore(){
+  var s=null;try{s=JSON.parse(localStorage.getItem('ams_portal'));}catch(e){}
+  if(!s||!s.id||!s.t)return false;
+  var r=await sb.from('am_users').select('*').eq('id',s.id).eq('sso_token',s.t).eq('active',true).maybeSingle();
+  if(r.error||!r.data||new Date(r.data.sso_exp)<new Date())return false;
+  me=r.data;return true;
+}
+async function logout(){
+  if(me)await sb.from('am_users').update({sso_token:null,sso_exp:null}).eq('id',me.id);
+  try{localStorage.removeItem('ams_portal');}catch(e){}
+  me=null;show('login');
+}
+function show(v){$('loading').classList.add('hide');$('v-login').classList.toggle('hide',v!=='login');$('v-app').classList.toggle('hide',v!=='app');if(v==='login')setTimeout(function(){$('l-user').focus();},50);}
+
+/* ── inicio ── */
+async function enter(){
+  view='home';show('app');
+  $('u-name').textContent=me.name;$('u-role').textContent=isAdmin()?'Administración':'';
+  render();
+}
+function hello(){
+  var d=new Date(),dias=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'],meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','setiembre','octubre','noviembre','diciembre'];
+  var h=d.getHours(),saludo=h<12?'Buen día':h<20?'Buenas tardes':'Buenas noches';
+  return '<h1>'+saludo+', '+esc(me.name.split(' ')[0])+'. <em>¿A dónde vamos?</em></h1><div class="date">'+dias[d.getDay()]+' '+d.getDate()+' de '+meses[d.getMonth()]+'</div>';
+}
+function render(){
+  if(view==='users')return renderUsers();
+  $('hello').innerHTML=hello();
+  var mine=APPS.filter(function(a){return hasApp(me,a.k);});
+  var h='';
+  if(!mine.length)h+='<div class="empty"><b>Todavía no tenés apps habilitadas</b>Pedile a la administración que te dé acceso.</div>';
+  else h+='<div class="apps">'+mine.map(function(a){var r=roleIn(me,a.k);return '<button class="app" style="--c:'+a.c+'" data-app="'+a.k+'"><span class="go">→</span><span class="ic">'+a.ic+'</span><b>'+esc(a.n)+'</b><p>'+esc(a.d)+'</p>'+(r?'<span class="rl">'+esc(r)+'</span>':'')+'</button>';}).join('')
+    +'<div class="app soon"><span class="ic">✨</span><b>Próximamente</b><p>Acá van a aparecer las próximas apps de la panadería.</p></div></div>';
+  if(isAdmin())h+='<div class="sect"><span>⚙</span>Administración</div><div class="apps"><button class="app admin" id="go-users"><span class="go">→</span><span class="ic">👥</span><b>Usuarios y accesos</b><p>Creá usuarios, cambiá contraseñas y elegí a qué apps entra cada uno y con qué rol.</p></button></div>';
+  $('main').innerHTML=h;
+  document.querySelectorAll('[data-app]').forEach(function(b){b.onclick=function(){openApp(b.getAttribute('data-app'));};});
+  var gu=$('go-users');if(gu)gu.onclick=function(){view='users';q='';loadUsers();};
+}
+async function openApp(k){
+  var a=APPS.find(function(x){return x.k===k;});
+  if(!me.sso_token||new Date(me.sso_exp)<new Date(Date.now()+864e5)){
+    var t=token(),exp=new Date(Date.now()+30*864e5).toISOString();
+    var r=await sb.from('am_users').update({sso_token:t,sso_exp:exp}).eq('id',me.id);
+    if(!r.error){me.sso_token=t;me.sso_exp=exp;save();}
+  }
+  if(k==='pan_molde'){var pp=await sb.from('pm_personas').select('*');personas=pp.data||[];var lk=personas.find(function(x){return x.am_user_id===me.id&&x.activo;});if(!lk)await syncPanMolde(me);}
+  location.href=a.url+'#sso='+me.id+'.'+me.sso_token;
+}
+
+/* ── usuarios y accesos ── */
+async function loadUsers(){
+  $('main').innerHTML='<div class="empty">Cargando usuarios…</div>';
+  var r=await sb.from('am_users').select('id,name,email,role,active,can_assign,apps').order('name');
+  var p=await sb.from('pm_personas').select('*');
+  users=r.data||[];personas=p.data||[];
+  renderUsers();
+}
+function renderUsers(){
+  $('hello').innerHTML='<button class="back" id="back" style="color:#fff">← Volver a las apps</button><h1 style="margin-top:10px">Usuarios <em>y accesos.</em></h1><div class="date">'+users.length+' usuarios</div>';
+  var list=users.filter(function(u){return !q||norm(u.name+' '+u.email).indexOf(norm(q))>=0;});
+  var h='<div class="uhead"><input class="search" id="q" placeholder="Buscar…" value="'+esc(q)+'"><div class="sp"></div><button class="btn sm" id="new-u">＋ Nuevo usuario</button></div><div class="ulist">';
+  h+=list.map(function(u){
+    var tags=APPS.filter(function(a){return hasApp(u,a.k);}).map(function(a){var r=roleIn(u,a.k);return '<span class="tag" style="box-shadow:inset 3px 0 0 '+a.c+'">'+a.ic+' '+esc(a.n)+(r?' · '+esc(r):'')+'</span>';}).join('');
+    return '<div class="urow'+(u.active===false?' off':'')+'" data-u="'+u.id+'"><span class="av">'+esc((u.name||'?')[0].toUpperCase())+'</span><div class="nm"><b>'+esc(u.name)+(u.active===false?' · deshabilitado':'')+'</b><small>'+esc(u.email)+'</small></div><div class="tags">'+(tags||'<span class="tag none">Sin apps</span>')+'</div></div>';
+  }).join('')+'</div>';
+  $('main').innerHTML=h;
+  $('back').onclick=function(){view='home';render();};
+  $('new-u').onclick=function(){editUser(null);};
+  var qi=$('q');qi.oninput=function(){q=qi.value;var pos=qi.selectionStart;renderUsers();var n=$('q');n.focus();n.setSelectionRange(pos,pos);};
+  document.querySelectorAll('[data-u]').forEach(function(r){r.onclick=function(){editUser(r.getAttribute('data-u'));};});
+}
+function editUser(id){
+  var u=id?users.find(function(x){return x.id===id;}):{name:'',email:'',role:'encargado',active:true,apps:{}};
+  var a=id?appsOf(u):{};
+  var self=me&&id===me.id;
+  var h='<div class="ov" id="ov"><div class="md"><h2>'+(id?'Editar <em>usuario</em>':'Nuevo <em>usuario</em>')+'</h2>'
+    +'<div class="box"><div class="two"><div><label class="f" style="margin-top:0">Nombre</label><input class="fi" id="e-name" value="'+esc(u.name)+'" placeholder="Ej: Sergio"></div><div><label class="f" style="margin-top:0">Usuario</label><input class="fi" id="e-email" autocapitalize="none" value="'+esc(u.email)+'" placeholder="Ej: sergio"></div></div>'
+    +'<label class="f">'+(id?'Nueva contraseña':'Contraseña')+'</label><input class="fi" id="e-pass" autocomplete="new-password" placeholder="'+(id?'Dejala vacía para no cambiarla':'Contraseña')+'">'
+    +(self?'':'<label class="chk"><input type="checkbox" id="e-active"'+(u.active!==false?' checked':'')+'> Habilitado (puede entrar)</label>')+'</div>'
+    +'<div class="box"><b style="font-family:var(--ft)">Apps a las que entra</b><div class="help">Activá cada app y elegí el rol que tiene en ella.</div>';
+  APPS.forEach(function(ap){
+    var on=!!a[ap.k];var sel='';
+    if(ap.k==='mantenimiento')sel='<label class="f" style="margin-top:0">Rol en Mantenimiento</label><select class="fs" id="r-mantenimiento"'+(self?' disabled':'')+'>'+ap.roles.map(function(r){return '<option value="'+r[0]+'"'+(u.role===r[0]?' selected':'')+'>'+r[1]+'</option>';}).join('')+'</select><label class="chk" id="w-assign"><input type="checkbox" id="e-assign"'+(u.can_assign?' checked':'')+'> Puede asignar responsables</label>';
+    else if(ap.roles)sel='<label class="f" style="margin-top:0">Rol en '+ap.n+'</label><select class="fs" id="r-'+ap.k+'">'+ap.roles.map(function(r){return '<option value="'+r[0]+'"'+(a[ap.k]===r[0]?' selected':'')+'>'+r[1]+'</option>';}).join('')+'</select>';
+    else sel='<div class="help" style="margin-top:0">Entra a la pantalla de Recepción. Las tablets de Sandwichería y Envasado siguen fijas en su pantalla.</div>';
+    h+='<div class="acc'+(on?'':' off')+'" style="--c:'+ap.c+'" id="acc-'+ap.k+'"><div class="acc-h"><span>'+ap.ic+'</span><b>'+ap.n+'</b><label class="sw"><input type="checkbox" id="s-'+ap.k+'"'+(on?' checked':'')+(self&&ap.k==='mantenimiento'?' disabled':'')+'><span></span></label></div><div class="acc-b">'+sel+'</div></div>';
+  });
+  h+='</div><div class="mfoot"><button class="btn sec" id="e-x">Cancelar</button><button class="btn" id="e-save">Guardar</button></div>'+(id&&!self?'<button class="del" id="e-del">🗑 Eliminar usuario</button>':'')+'</div></div>';
+  $('modal').innerHTML=h;
+  APPS.forEach(function(ap){var s=$('s-'+ap.k);s.onchange=function(){$('acc-'+ap.k).classList.toggle('off',!s.checked);};});
+  var rm=$('r-mantenimiento'),wa=$('w-assign');var sy=function(){wa.style.display=rm.value==='encargado'?'':'none';};sy();rm.onchange=sy;
+  $('e-x').onclick=closeM;$('ov').onclick=function(e){if(e.target.id==='ov')closeM();};
+  $('e-save').onclick=function(){saveUser(u,id);};
+  var d=$('e-del');if(d)d.onclick=function(){delUser(u);};
+}
+function closeM(){$('modal').innerHTML='';}
+async function saveUser(u,id){
+  var name=$('e-name').value.trim(),email=$('e-email').value.trim().toLowerCase(),pass=$('e-pass').value;
+  if(!name||!email)return toast('Completá nombre y usuario',1);
+  if(!id&&!pass)return toast('Poné una contraseña',1);
+  if(users.some(function(x){return x.id!==id&&norm(x.email)===norm(email);}))return toast('Ese usuario ya existe',1);
+  var apps={};
+  APPS.forEach(function(ap){if(!$('s-'+ap.k).checked)return;apps[ap.k]=ap.roles&&ap.k!=='mantenimiento'?$('r-'+ap.k).value:true;});
+  if(id===me.id)apps.mantenimiento=appsOf(u).mantenimiento||true;
+  var role=$('r-mantenimiento').value;
+  var row={name:name,email:email,role:role,can_assign:role==='encargado'&&$('e-assign').checked,apps:apps};
+  if(pass)row.password=pass;
+  var ac=$('e-active');if(ac)row.active=ac.checked;
+  $('e-save').disabled=true;
+  var r=id?await sb.from('am_users').update(row).eq('id',id).select().single():await sb.from('am_users').insert(row).select().single();
+  if(r.error){$('e-save').disabled=false;console.error(r.error);return toast(r.error.code==='23505'?'Ese usuario ya existe':'No se pudo guardar',1);}
+  var saved=r.data;
+  if(id&&name!==u.name){
+    await sb.from('am_orders').update({assigned_tech:name}).eq('assigned_tech',u.name);
+    await sb.from('am_orders').update({requested_name:name}).eq('requested_by',id);
+  }
+  var ok=await syncPanMolde(saved);
+  if(id===me.id){me.name=name;$('u-name').textContent=name;}
+  closeM();toast(ok?'Guardado':'Guardado, pero no se pudo actualizar Control moldes',!ok);
+  await loadUsers();
+}
+/* Pan de molde guarda sus personas en pm_personas: las mantenemos sincronizadas */
+async function syncPanMolde(u){
+  var rol=u.active!==false&&u.apps&&u.apps.pan_molde;
+  var p=personas.find(function(x){return x.am_user_id===u.id;});
+  if(!p&&rol)p=personas.find(function(x){return !x.am_user_id&&norm(x.nombre)===norm(u.name);});
+  if(!p&&rol)p=personas.find(function(x){return !x.am_user_id&&norm(x.nombre).split(' ')[0]===norm(u.name).split(' ')[0];});
+  var r;
+  if(p){
+    var upd=rol?{nombre:u.name,rol:rol,activo:true,am_user_id:u.id}:{activo:false};
+    r=await sb.from('pm_personas').update(upd).eq('id',p.id);
+  }else if(rol){
+    r=await sb.from('pm_personas').insert({id:crypto.randomUUID(),nombre:u.name,rol:rol,activo:true,am_user_id:u.id});
+  }else return true;
+  if(r.error)console.error(r.error);
+  return !r.error;
+}
+async function delUser(u){
+  if(!confirm('¿Eliminar a '+u.name+'?\nYa no va a poder entrar a ninguna app. Lo que cargó queda guardado.'))return;
+  var r=await sb.from('am_users').delete().eq('id',u.id);
+  if(r.error){
+    if(!confirm('No se puede eliminar porque tiene registros vinculados.\n¿Lo deshabilito para que no pueda entrar?'))return;
+    await sb.from('am_users').update({active:false,sso_token:null}).eq('id',u.id);
+  }
+  await syncPanMolde(Object.assign({},u,{active:false}));
+  closeM();toast(u.name+(r.error?' deshabilitado':' eliminado'));await loadUsers();
+}
+
+$('l-go').onclick=login;
+$('l-pass').addEventListener('keydown',function(e){if(e.key==='Enter')login();});
+$('l-user').addEventListener('keydown',function(e){if(e.key==='Enter')$('l-pass').focus();});
+$('logout').onclick=logout;
+(async function(){
+  try{if(await restore())return enter();}catch(e){console.error(e);}
+  show('login');
+})();
+</script>
+</body>
+</html>
